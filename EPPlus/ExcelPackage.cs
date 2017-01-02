@@ -1016,7 +1016,7 @@ namespace OfficeOpenXml
             XmlHelper.LoadXmlSafe(xml, part.GetStream()); 
 			return (xml);
 		}
-		#endregion
+        #endregion
 
         /// <summary>
         /// Saves and returns the Excel files as a bytearray.
@@ -1030,13 +1030,14 @@ namespace OfficeOpenXml
         ///  Byte[] bin = package.GetAsByteArray();
         ///  Response.ContentType = "Application/vnd.ms-Excel";
         ///  Response.AddHeader("content-disposition", "attachment;  filename=TheFile.xlsx");
-		///  Response.BinaryWrite(bin);
+        ///  Response.BinaryWrite(bin);
         /// </code>
         /// </example>
+        /// <param name="validateBeforeSave">Whether to execute the validations before save.</param>
         /// <returns></returns>
-        public byte[] GetAsByteArray()
+        public byte[] GetAsByteArray(bool validateBeforeSave = true)
         {
-           return GetAsByteArray(true);
+           return GetAsByteArray(true, validateBeforeSave);
         }
         /// <summary>
         /// Saves and returns the Excel files as a bytearray
@@ -1055,20 +1056,21 @@ namespace OfficeOpenXml
         /// </example>
         /// <param name="password">The password to encrypt the workbook with. 
         /// This parameter overrides the Encryption.Password.</param>
+        /// <param name="validateBeforeSave">Whether to execute the validations before save.</param>
         /// <returns></returns>
-        public byte[] GetAsByteArray(string password)
+        public byte[] GetAsByteArray(string password, bool validateBeforeSave = true)
         {
             if (password != null)
             {
                 Encryption.Password = password;
             }
-            return GetAsByteArray(true);
+            return GetAsByteArray(true, validateBeforeSave);
         }
-        internal byte[] GetAsByteArray(bool save)
+        internal byte[] GetAsByteArray(bool save, bool validateBeforeSave)
         {
             if (save)
             {
-                Workbook.Save();
+                Workbook.Save(validateBeforeSave);
                 _package.Close();
                 _package.Save(_stream);
             }

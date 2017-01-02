@@ -748,15 +748,16 @@ namespace OfficeOpenXml
                 SetXmlNodeBool(FULL_CALC_ON_LOAD_PATH, value);
 	        }
 	    }
-		#endregion
-		#region Workbook Private Methods
-			
-		#region Save // Workbook Save
-		/// <summary>
-		/// Saves the workbook and all its components to the package.
-		/// For internal use only!
-		/// </summary>
-		internal void Save()  // Workbook Save
+        #endregion
+        #region Workbook Private Methods
+
+        #region Save // Workbook Save
+        /// <summary>
+        /// Saves the workbook and all its components to the package.
+        /// For internal use only!
+        /// </summary>
+        /// <param name="validateBeforeSave">Whether to execute the validations before save.</param>
+        internal void Save(bool validateBeforeSave = true)  // Workbook Save
 		{
 			if (Worksheets.Count == 0)
 				throw new InvalidOperationException("The workbook must contain at least one worksheet");
@@ -822,9 +823,12 @@ namespace OfficeOpenXml
 
             part.SaveHandler = SaveSharedStringHandler;
             //UpdateSharedStringsXml();
-			
-			// Data validation
-			ValidateDataValidations();
+
+            // Data validation
+            if (validateBeforeSave)
+            {
+                ValidateDataValidations();
+            }
 
             //VBA
             if (_vba!=null)
